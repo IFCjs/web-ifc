@@ -16,7 +16,9 @@ namespace fuzzybools
 
 		auto geom = Normalize(sp);
 
-		DumpGeometry(geom, L"Post-normalize.obj");
+        #ifdef CSG_DEBUG_OUTPUT
+			DumpGeometry(geom, L"Post-normalize.obj");
+		#endif
 
 		return fuzzybools::clipSubtract(geom, bvh1, bvh2);
 	}

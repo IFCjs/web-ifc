@@ -45,7 +45,7 @@ namespace fuzzybools
         BVH& bvh
     )
     {
-        Vec dir(1.0, 1.1, 1.4);   // From where does this come?
+        Vec dir(1.0, 1.1, 1.4);   // From where does this come? // This is an arbitrary direction to evaluate inside/outside
         int winding = 0;
 
         InsideResult result;
@@ -71,8 +71,6 @@ namespace fuzzybools
                     double dn = glm::dot(otherNormal, normal);
                     if (std::fabs(distance) < toleranceBoundaryPoint)
                     {
-
-                    
                         if (dn > 1.0 - toleranceParallel)
                         {
 /*
@@ -101,15 +99,16 @@ namespace fuzzybools
                         }    
                     }
 
+                    // It will never reach the --else-- code
 //                  if (true || d >= 0)
-                    if (true || d > toleranceParallelTight)
-                    {
-                        winding++;
-                    }
-                    else
-                    {
-                        winding--;
-                    }
+                    // if (true || d > toleranceParallelTight)
+                    // {
+                    winding++;
+                    // }
+                    // else
+                    // {
+                    //     winding--;
+                    // }
                 }
 
                 // Continue to search.

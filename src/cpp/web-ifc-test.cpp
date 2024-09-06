@@ -405,7 +405,8 @@ int main()
 
     // return 0;
 
-    std::string content = ReadFile("C:/Users/qmoya/Desktop/test/Sample3_ArchiCAD25.ifc");
+    // std::string content = ReadFile("C:/Users/qmoya/Desktop/test/Sample3_ArchiCAD25.ifc");
+    std::string content = ReadFile("C:/Users/qmoya/Desktop/MODELS/OBJECT_WALL_FINAL.ifc");
 
 
     struct LoaderSettings
@@ -445,9 +446,9 @@ int main()
 
     start = ms();
     
-    SpecificLoadTest(loader, geometryLoader, 283);
+    // SpecificLoadTest(loader, geometryLoader, 283);
 
-    // auto meshes = LoadAllTest(loader, geometryLoader, -1);
+    auto meshes = LoadAllTest(loader, geometryLoader, -1);
     std::cout << GetLine(loader, 225) << std::endl;
     // auto alignments = GetAlignments(loader, geometryLoader);
 

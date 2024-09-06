@@ -1,0 +1,46 @@
+ISO-10303-21;
+HEADER;
+/******************************************************
+* STEP Physical File produced by: That Open Engine WebIfc 0.0.57
+* Module: web-ifc/IfcLoader
+* Version: 0.0.57
+* Source: https://github.com/ThatOpen/engine_web-ifc
+* Issues: https://github.com/ThatOpen/engine_web-ifc/issues
+******************************************************/
+FILE_DESCRIPTION(('1','2'),'2;1');
+FILE_NAME('test.ifc','2024-09-02T09:36:54',('3','4'),('5','6'),'thatopen/web-ifc-api','thatopen/web-ifc-api','78');
+FILE_SCHEMA(('IFC2X3'));
+ENDSEC;
+DATA;
+#1=IFCCARTESIANPOINT((1.,2.,3.));
+#2=IFCCARTESIANPOINT((4.,5.,6.));
+#3=IFCCARTESIANPOINT((7.,8.,9.));
+#4=IFCPOLYLOOP((#1,#2,#3));
+#5=IFCFACEOUTERBOUND(#4,.T.);
+#6=IFCFACE((#5));
+ENDSEC;
+END-ISO-10303-21;
+---------------------
+ISO-10303-21;
+HEADER;
+/******************************************************
+* STEP Physical File produced by: That Open Engine WebIfc 0.0.57
+* Module: web-ifc/IfcLoader
+* Version: 0.0.57
+* Source: https://github.com/ThatOpen/engine_web-ifc
+* Issues: https://github.com/ThatOpen/engine_web-ifc/issues
+******************************************************/
+FILE_DESCRIPTION(('1','2'),'2;1');
+FILE_NAME('test.ifc','2024-09-02T09:36:54',('3','4'),('5','6'),'thatopen/web-ifc-api','thatopen/web-ifc-api','78');
+FILE_SCHEMA(('IFC2X3'));
+ENDSEC;
+DATA;
+#7=IFCCARTESIANPOINT((1.,2.,3.));
+#8=IFCCARTESIANPOINT((4.,5.,6.));
+#9=IFCCARTESIANPOINT((7.,8.,9.));
+#10=IFCPOLYLOOP((#7,#8,#9));
+#11=IFCFACEOUTERBOUND(#10,.T.);
+#12=IFCFACE((#11));
+ENDSEC;
+END-ISO-10303-21;
+---------------------

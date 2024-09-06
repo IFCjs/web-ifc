@@ -13,49 +13,6 @@
 
 namespace fuzzybools
 {
-    static void clipMesh(Geometry& source, Geometry& target, BVH& targetBVH, Geometry& result, bool invert, bool flip, bool keepBoundary)
-    {
-        glm::dvec3 targetCenter;
-        glm::dvec3 targetExtents;
-        target.GetCenterExtents(targetCenter, targetExtents);
-
-        for (uint32_t i = 0; i < source.numFaces; i++)
-        {
-            Face tri = source.GetFace(i);
-            glm::dvec3 a = source.GetPoint(tri.i0);
-            glm::dvec3 b = source.GetPoint(tri.i1);
-            glm::dvec3 c = source.GetPoint(tri.i2);
-
-            glm::dvec3 n = computeNormal(a, b, c);
-
-            glm::dvec3 triCenter = (a + b + c) * 1.0 / 3.0;
-
-            auto isInsideTarget = MeshLocation::INSIDE;
-
-            if (IsInsideCenterExtents(triCenter, targetCenter, targetExtents))
-            {
-                isInsideTarget = isInsideMesh(triCenter, n, *targetBVH.ptr, targetBVH).loc;
-            }
-            else
-            {
-                isInsideTarget = MeshLocation::OUTSIDE;
-            }
-
-            if ((isInsideTarget == MeshLocation::INSIDE && !invert) || (isInsideTarget == MeshLocation::OUTSIDE && invert) || (isInsideTarget == MeshLocation::BOUNDARY && keepBoundary))
-            {
-                // emit triangle
-                if (flip)
-                {
-                    result.AddFace(a, c, b);
-                }
-                else
-                {
-                    result.AddFace(a, b, c);
-                }
-            }
-        }
-    }
-
     static void doubleClipSingleMesh(Geometry& mesh, BVH& bvh1, BVH& bvh2, Geometry& result)
     {
         for (uint32_t i = 0; i < mesh.numFaces; i++)
@@ -69,8 +26,10 @@ namespace fuzzybools
 
             if (!aabb.intersects(bvh2.box))
             {
+                // Why is this commented?
+
                 // when subtracting, if box is outside the second operand, its guaranteed to remain
-                //result.AddFace(a, b, c);
+                result.AddFace(a, b, c);
                 //continue;
             }
             else if (!aabb.intersects(bvh1.box))

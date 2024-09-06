@@ -1029,7 +1029,8 @@ namespace fuzzybools
             {
                 result.emplace_back(points[i - 1], points[i]);
             }
-
+            
+            // Remove redundant lines
             result.erase(std::unique(result.begin(), result.end()), result.end());
 
             return result;
@@ -1154,18 +1155,18 @@ namespace fuzzybools
                         edges.insert(std::make_pair(projectedIndexA, projectedIndexB));
                     }
                 }
+            }
 
-                if (false)
+            if (true)
+            {
+                std::vector<std::vector<glm::dvec2>> edgesPrinted;
+
+                for (auto& e : edges)
                 {
-                    std::vector<std::vector<glm::dvec2>> edgesPrinted;
-
-                    for (auto& e : edges)
-                    {
-                        edgesPrinted.push_back({ projectedPoints[e.first], projectedPoints[e.second] });
-                    }
-
-                    DumpSVGLines(edgesPrinted, L"poly_" + std::to_wstring(line.id) + L".html");
+                    edgesPrinted.push_back({ projectedPoints[e.first], projectedPoints[e.second] });
                 }
+
+                DumpSVGLines(edgesPrinted, L"poly.html");
             }
 
             CDT::Triangulation<double> cdt(CDT::VertexInsertionOrder::AsProvided);
@@ -1193,8 +1194,14 @@ namespace fuzzybools
 
             //auto contourLoop = FindLargestEdgeLoop(projectedPoints, edges);
 
+            std::set<std::pair<size_t, size_t>> edgesTriangles;
+            std::set<std::pair<size_t, size_t>> finalEdgesTriangles;
+
             for (auto& tri : triangles)
             {
+                edgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[1]));
+                edgesTriangles.insert(std::make_pair(tri.vertices[1], tri.vertices[2]));
+                edgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[2]));
                 size_t pointIdA = projectedPointToPoint[mapping[tri.vertices[0]]];
                 size_t pointIdB = projectedPointToPoint[mapping[tri.vertices[1]]];
                 size_t pointIdC = projectedPointToPoint[mapping[tri.vertices[2]]];
@@ -1226,9 +1233,32 @@ namespace fuzzybools
 
                 // TODO: why is this swapped? winding doesnt matter much, but still
                 geom.AddFace(ptB, ptA, ptC);
+                finalEdgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[1]));
+                finalEdgesTriangles.insert(std::make_pair(tri.vertices[1], tri.vertices[2]));
+                finalEdgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[2]));
+            }
+        
+            if (true)
+            {
+                std::vector<std::vector<glm::dvec2>> edgesPrinted;
+
+                for (auto& e : edgesTriangles)
+                {
+                    edgesPrinted.push_back({ projectedPoints[e.first], projectedPoints[e.second] });
+                }
+
+                DumpSVGLines(edgesPrinted, L"poly_triangulation.html");
+
+                std::vector<std::vector<glm::dvec2>> finalEdgesPrinted;
+
+                for (auto& e : finalEdgesTriangles)
+                {
+                    finalEdgesPrinted.push_back({ projectedPoints[e.first], projectedPoints[e.second] });
+                }
+
+                DumpSVGLines(finalEdgesPrinted, L"final_poly_triangulation.html");
             }
         }
-
 //============================================================================================
 
         std::unordered_map<size_t, std::vector<size_t>> planeToLines;
