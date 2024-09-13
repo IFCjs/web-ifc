@@ -103,7 +103,7 @@ inline IfcCurve Build3DArc3Pt(const glm::dvec3 &p1, const glm::dvec3 &p2, const 
 		double cenYa = (f2 - 2 * cenX * (p1.x - p3.x)) / (2 * (p1.y - p3.y));
 		double cenYb = (f1 - 2 * cenX * (p1.x - p2.x)) / (2 * (p1.y - p2.y));
 		double cenY = cenYa;
-		if (std::isnan(cenY))
+		if (std::isnan(cenY) or std::isinf(cenY))
 		{
 			cenY = cenYb;
 		}
