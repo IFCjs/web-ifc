@@ -1,7 +1,7 @@
 import { IfcApplication } from './../../src/ifc-schema';
 import { IfcAPI, LogLevel,ms, Schemas, IFCUNITASSIGNMENT, IFCAXIS2PLACEMENT3D,IFCLENGTHMEASURE,IFCCARTESIANPOINT,IFCAXIS2PLACEMENT2D,IFCCIRCLEPROFILEDEF,IFCDIRECTION,IFCREAL,IFCPOSITIVELENGTHMEASURE,IFCCOLUMN,IFCEXTRUDEDAREASOLID,IFCGLOBALLYUNIQUEID,IFCLABEL,IFCIDENTIFIER } from '../../dist/web-ifc-api';
 import { IfcThree } from './web-ifc-three';
-import { Init3DView, InitBasicScene, scene } from './web-ifc-scene';
+import { Init3DView, InitBasicScene, ClearScene, scene } from './web-ifc-scene';
 import * as Monaco from 'monaco-editor';
 import * as ts_decl from "./ts_src";
 import * as ts from "typescript";
@@ -81,7 +81,9 @@ window.InitWebIfcViewer = async (monacoEditor: Monaco.editor.IStandaloneCodeEdit
   codereset.addEventListener('click', resetCode);
   const coderun = document.getElementById('runcode');
   coderun.addEventListener('click', runCode);
-   const changeLogLevelSelect = document.getElementById('logLevel');
+  const clearmem = document.getElementById('cmem');
+  clearmem.addEventListener('click', clearMem);
+  const changeLogLevelSelect = document.getElementById('logLevel');
   changeLogLevelSelect.addEventListener('change', changeLogLevel);
   Init3DView();
 };
@@ -123,6 +125,12 @@ async function runCode() {
 async function resetCode() {
     window.localStorage.setItem('code', exampleCode);
     location.reload();
+}
+
+async function clearMem() {
+    ClearScene();
+    ifcAPI.Dispose();
+    await ifcAPI.Init();
 }
 
 async function fileInputChanged() {

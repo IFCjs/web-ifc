@@ -27,6 +27,10 @@ function Init3DView() {
   AnimationLoop();
 }
 
+export function ClearScene() {
+  while(scene.children.length > 0) scene.remove(scene.children[0]); 
+}
+
 export function InitBasicScene()
 {
   const directionalLight1 = new THREE.DirectionalLight(0xffeeff, 0.8);

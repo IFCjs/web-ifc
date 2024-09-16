@@ -943,11 +943,12 @@ export class IfcAPI {
     }
 
     /**
-     * Closes all models and frees all related memory
+     * Closes all models and frees all related memory. Please note that after calling this you must call Init() again to ensure web-ifc is in a working state.
     */
     Dispose() {
         this.ifcGuidMap.clear()
         this.wasmModule.CloseAllModels();
+        this.wasmModule = undefined;
     }
 
     /**
