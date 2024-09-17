@@ -91,7 +91,7 @@ namespace webifc::io
         std::vector<glm::dvec2> points2D;
         for (auto &pt : points)
         {
-            points2D.emplace_back(pt.x, pt.z);
+            points2D.emplace_back(pt.x, pt.y);
         }
         writeFile(filename, makeSVGLines(points2D, indices));
     }

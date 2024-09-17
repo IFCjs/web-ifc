@@ -2354,6 +2354,10 @@ IfcProfile IfcGeometryLoader::GetProfile(uint32_t expressID) const
       for (auto &hole : holes)
       {
         IfcCurve holeCurve = GetCurve(_loader.GetRefArgument(hole), 2);
+        #ifdef CSG_DEBUG_OUTPUT
+          io::DumpSVGCurve(holeCurve.points, "IFCEXTRUDEDAREASOLID_hole_curve.html");
+        #endif
+
         profile.holes.push_back(holeCurve);
       }
 

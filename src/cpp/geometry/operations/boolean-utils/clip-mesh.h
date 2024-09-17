@@ -14,9 +14,14 @@
 namespace fuzzybools
 {
     static void doubleClipSingleMesh(Geometry& mesh, BVH& bvh1, BVH& bvh2, Geometry& result)
-    {
+    {  
+        #ifdef CSG_DEBUG_OUTPUT
+            std::vector<std::vector<glm::dvec2>> edgesPrinted;
+        #endif
+
         for (uint32_t i = 0; i < mesh.numFaces; i++)
         {
+            bool doit = false;
             Face tri = mesh.GetFace(i);
             glm::dvec3 a = mesh.GetPoint(tri.i0);
             glm::dvec3 b = mesh.GetPoint(tri.i1);
@@ -29,7 +34,7 @@ namespace fuzzybools
                 // Why is this commented?
 
                 // when subtracting, if box is outside the second operand, its guaranteed to remain
-                result.AddFace(a, b, c);
+                // result.AddFace(a, b, c);
                 //continue;
             }
             else if (!aabb.intersects(bvh1.box))
@@ -70,6 +75,7 @@ namespace fuzzybools
                     // normals face away from eachother, we can keep this face
                     // furthermore, since the first operand is the first added, we don't flip
                     result.AddFace(a, b, c);
+                    doit = true;
                 }
             }
             else
@@ -88,10 +94,12 @@ namespace fuzzybools
                         if (glm::dot(n, isInside2Loc.normal) < 0)
                         {
                             result.AddFace(a, b, c);
+                            doit = true;
                         }
                         else
                         {
                             result.AddFace(b, a, c);
+                            doit = true;
                         }
                     }
                     else if (isInside1 == MeshLocation::BOUNDARY)
@@ -100,19 +108,36 @@ namespace fuzzybools
                         if (glm::dot(n, isInside1Loc.normal) < 0)
                         {
                             result.AddFace(b, a, c);
+                            doit = true;
                         }
                         else
                         {
                             result.AddFace(a, b, c);
+                            doit = true;
                         }
                     }
                     else
                     {
                         result.AddFace(a, b, c);
+                        doit = true;
                     }
                 }
             }
+
+            #ifdef CSG_DEBUG_OUTPUT
+                if (doit)
+                {
+                    edgesPrinted.push_back({ glm::dvec2(a.x, a.z), glm::dvec2(b.x, b.z)});
+                    edgesPrinted.push_back({ glm::dvec2(a.x, a.z), glm::dvec2(c.x, c.z) });
+                    edgesPrinted.push_back({ glm::dvec2(b.x, b.z), glm::dvec2(c.x, c.z) });
+                    DumpSVGLines(edgesPrinted, L"final_tri.html");
+                }
+            #endif
         }
+
+        #ifdef CSG_DEBUG_OUTPUT
+            DumpSVGLines(edgesPrinted, L"final_tri.html");
+        #endif
     }
 
     static void doubleClipSingleMesh2(Geometry& mesh, BVH& bvh1, BVH& bvh2, Geometry& result)

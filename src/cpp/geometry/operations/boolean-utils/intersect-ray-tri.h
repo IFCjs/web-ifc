@@ -61,6 +61,11 @@ namespace fuzzybools
         of intersection.
 */   
         double NdotRayDirection = glm::dot(n, dir);
+
+        // Vec n_norm = glm::normalize(n);
+        // Vec dir_norm = glm::normalize(dir);
+        // double NdotRayDirection = glm::dot(n_norm, dir_norm);
+
 //      if (std::fabs(NdotRayDirection) < toleranceParallelTight * nLength * dirLength)
         if (std::fabs(NdotRayDirection) < toleranceParallelTight)
             return false; 
@@ -78,12 +83,14 @@ namespace fuzzybools
         (b) Compute t.  The distance from the origin to the point of intersection is t |dir|, where
             |dir| is the length of dir.
 */    
-        t = -(glm::dot(n, origin) + d) / NdotRayDirection;   
+        double d_origin = glm::dot(n, origin);
+
+        t = -(d_origin + d) / NdotRayDirection;   
 /*
         (c) Check if the triangle is behind the ray.  If so, return false.
 */    
 //      if (t < -toleranceInsideOutside * dirLength) return false;
-        if (t < -toleranceInsideOutside) return false;
+        if (t < -toleranceInsideOutsideToPlane) return false;
 /*
         (d) Compute p, the point of intersection.
 */    
@@ -116,25 +123,28 @@ namespace fuzzybools
         Vec edge0 = v1 - v0; 
         Vec v0p = p - v0;
         c = glm::cross(edge0, v0p);
-        cLength = c.length();	
+        cLength = c.length();
+        double valdot = glm::dot(n, c);
 //      if (glm::dot(n, c) < -toleranceInsideOutside * nLength * cLength) return false;
-        if (glm::dot(n, c) < -toleranceInsideOutside) return false;
+        if (valdot < -toleranceInsideOutside) return false;
  
         // edge 1
         Vec edge1 = v2 - v1; 
         Vec v1p = p - v1;
         c = glm::cross(edge1, v1p);
-        cLength = c.length();	
+        cLength = c.length();
+        valdot = glm::dot(n, c);
 //      if (glm::dot(n, c) < -toleranceInsideOutside * nLength * cLength) return false;
-        if (glm::dot(n, c) < -toleranceInsideOutside) return false;
+        if (valdot < -toleranceInsideOutside) return false;
  
         // edge 2
         Vec edge2 = v0 - v2; 
         Vec v2p = p - v2;
         c = glm::cross(edge2, v2p);
-        cLength = c.length();	
+        cLength = c.length();
+        valdot = glm::dot(n, c);	
 //      if (glm::dot(n, c) < -toleranceInsideOutside * nLength * cLength) return false;
-        if (glm::dot(n, c) < -toleranceInsideOutside) return false;
+        if (valdot < -toleranceInsideOutside) return false;
     
         hitPosition = p;
 

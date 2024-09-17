@@ -24,6 +24,7 @@
 
 using Vec2 = glm::dvec2;
 using Vec3 = glm::dvec3;
+
 namespace fuzzybools
 {
 
@@ -1095,6 +1096,7 @@ namespace fuzzybools
 
         void TriangulatePlane(Geometry& geom, Plane& p)
         {
+
             // grab all points on the plane
             auto pointsOnPlane = GetPointsOnPlane(p);
 
@@ -1157,8 +1159,7 @@ namespace fuzzybools
                 }
             }
 
-            if (true)
-            {
+            #ifdef CSG_DEBUG_OUTPUT
                 std::vector<std::vector<glm::dvec2>> edgesPrinted;
 
                 for (auto& e : edges)
@@ -1167,7 +1168,7 @@ namespace fuzzybools
                 }
 
                 DumpSVGLines(edgesPrinted, L"poly.html");
-            }
+            #endif
 
             CDT::Triangulation<double> cdt(CDT::VertexInsertionOrder::AsProvided);
             std::vector<CDT::Edge> cdt_edges;
@@ -1194,14 +1195,19 @@ namespace fuzzybools
 
             //auto contourLoop = FindLargestEdgeLoop(projectedPoints, edges);
 
-            std::set<std::pair<size_t, size_t>> edgesTriangles;
-            std::set<std::pair<size_t, size_t>> finalEdgesTriangles;
+            #ifdef CSG_DEBUG_OUTPUT
+                std::set<std::pair<size_t, size_t>> edgesTriangles;
+                std::set<std::pair<size_t, size_t>> finalEdgesTriangles;
+            #endif
 
             for (auto& tri : triangles)
             {
-                edgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[1]));
-                edgesTriangles.insert(std::make_pair(tri.vertices[1], tri.vertices[2]));
-                edgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[2]));
+                #ifdef CSG_DEBUG_OUTPUT
+                    edgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[1]));
+                    edgesTriangles.insert(std::make_pair(tri.vertices[1], tri.vertices[2]));
+                    edgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[2]));
+                #endif
+
                 size_t pointIdA = projectedPointToPoint[mapping[tri.vertices[0]]];
                 size_t pointIdB = projectedPointToPoint[mapping[tri.vertices[1]]];
                 size_t pointIdC = projectedPointToPoint[mapping[tri.vertices[2]]];
@@ -1233,21 +1239,23 @@ namespace fuzzybools
 
                 // TODO: why is this swapped? winding doesnt matter much, but still
                 geom.AddFace(ptB, ptA, ptC);
-                finalEdgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[1]));
-                finalEdgesTriangles.insert(std::make_pair(tri.vertices[1], tri.vertices[2]));
-                finalEdgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[2]));
+
+                #ifdef CSG_DEBUG_OUTPUT
+                    finalEdgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[1]));
+                    finalEdgesTriangles.insert(std::make_pair(tri.vertices[1], tri.vertices[2]));
+                    finalEdgesTriangles.insert(std::make_pair(tri.vertices[0], tri.vertices[2]));
+                #endif
             }
         
-            if (true)
-            {
-                std::vector<std::vector<glm::dvec2>> edgesPrinted;
+            #ifdef CSG_DEBUG_OUTPUT
+                std::vector<std::vector<glm::dvec2>> edgesPrinted2;
 
                 for (auto& e : edgesTriangles)
                 {
-                    edgesPrinted.push_back({ projectedPoints[e.first], projectedPoints[e.second] });
+                    edgesPrinted2.push_back({ projectedPoints[e.first], projectedPoints[e.second] });
                 }
 
-                DumpSVGLines(edgesPrinted, L"poly_triangulation.html");
+                DumpSVGLines(edgesPrinted2, L"poly_triangulation.html");
 
                 std::vector<std::vector<glm::dvec2>> finalEdgesPrinted;
 
@@ -1257,7 +1265,7 @@ namespace fuzzybools
                 }
 
                 DumpSVGLines(finalEdgesPrinted, L"final_poly_triangulation.html");
-            }
+            #endif
         }
 //============================================================================================
 
@@ -1500,6 +1508,7 @@ namespace fuzzybools
 
     inline Geometry Normalize(SharedPosition& sp)
     {
+
         // construct all contours, derive lines
         auto contoursA = sp.A.GetContourSegments();
 
@@ -1509,8 +1518,7 @@ namespace fuzzybools
 
             Plane& p = sp.planes[planeId];
 
-            if (false)
-            {
+            #ifdef CSG_DEBUG_OUTPUT
                 auto basis = p.MakeBasis();
 
                 for (auto& segment : contours)
@@ -1518,7 +1526,8 @@ namespace fuzzybools
                     edges.push_back({ basis.project(sp.points[segment.first].location3D), basis.project(sp.points[segment.second].location3D) });
                 }
                 DumpSVGLines(edges, L"contour.html");
-            }
+            #endif
+
             for (auto& segment : contours)
             {
                 auto lineId = sp.planes[planeId].AddLine(sp.points[segment.first], sp.points[segment.second]);
