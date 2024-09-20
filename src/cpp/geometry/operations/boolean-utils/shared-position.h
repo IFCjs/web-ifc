@@ -1216,6 +1216,15 @@ namespace fuzzybools
                 auto ptB = points[pointIdB].location3D;
                 auto ptC = points[pointIdC].location3D;
 
+                glm::dvec3 v1 = glm::normalize(ptA - ptB);
+                glm::dvec3 v2 = glm::normalize(ptA - ptC);
+                double rs = glm::dot(v1,v2);
+
+                if(std::abs(rs) > 1 - toleranceThinTriangle) 
+                { 
+                    continue; 
+                }
+
                 auto pt2DA = projectedPoints[mapping[tri.vertices[0]]];
                 auto pt2DB = projectedPoints[mapping[tri.vertices[1]]];
                 auto pt2DC = projectedPoints[mapping[tri.vertices[2]]];

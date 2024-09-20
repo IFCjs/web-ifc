@@ -1104,4 +1104,25 @@ export class IfcAPI {
         Log.setLogLevel(level);
         this.wasmModule.SetLogLevel(level);
     }
+
+    /**
+     * Encodes test using IFC Encoding
+     * @text the text to encode
+     * @returns the text encoded 
+     */
+
+    EncodeText(text:string) {
+        return this.wasmModule.EncodeText(text);
+    }
+
+     /**
+     * Decodes test using IFC Encoding
+     * @text the text to decode
+     * @returns the text decoded 
+     */
+
+    DecodeText(text: string) {
+        return this.wasmModule.DecodeText(text);
+    }
+
 }

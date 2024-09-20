@@ -560,6 +560,10 @@ namespace webifc::geometry
 			{
 				EPS = 0.01;
 			}
+			if (i == 3)
+			{
+				EPS = 1e-08;
+			}
 			for (auto &p : points)
 			{
 				if (computeSafeNormal(v1, v2, p, normal, EPS))

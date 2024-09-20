@@ -1947,7 +1947,7 @@ namespace webifc::geometry
           {
             glm::dvec3 vec(0);
             vec[0] = radius1 * std::cos(angle);
-            vec[1] = -radius2 * std::sin(angle); // negative or not???
+            vec[1] = radius2 * std::sin(angle) * sameSense; // negative or not???
             glm::dvec3 pos = GetLocalPlacement(positionID) * glm::dvec4(glm::dvec3(vec), 1);
             curve.Add(pos);
           }
